@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+    client:
+        image: anhcll/nhatrotot-chat-service:v1
+        ports:
+            - "4444:4444"
+        container_name: clientr
