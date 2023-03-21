@@ -41,7 +41,6 @@ module.exports = async (io, socket) => {
         }
     }
     socket.on("disconnect", async () => {
-        console.log("dis", socket.id);
         try {
             await User.updateOne(
                 {

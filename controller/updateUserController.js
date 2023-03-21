@@ -1,14 +1,15 @@
 const User = require("../models/userModel");
-
-async function putImageController(req, res) {
+async function updateUserHandle(req, res) {
     try {
-        const image = req.body.image;
+        const body = req.body;
         const userId = req.kauth.grant.access_token.content.sub;
         const isUserExist = await User.checkUser(userId);
         if (!isUserExist) {
             await User.createUser({
                 _id: userId,
-                image,
+                image: body.image,
+                lastName: body.lastName,
+                firstName: body.firstName,
             });
         } else {
             await User.updateOne(
@@ -16,7 +17,9 @@ async function putImageController(req, res) {
                     _id: userId,
                 },
                 {
-                    image: image,
+                    image: body.image,
+                    lastName: body.lastName,
+                    firstName: body.firstName,
                 },
             );
         }
@@ -27,5 +30,5 @@ async function putImageController(req, res) {
     }
 }
 module.exports = {
-    putImageController,
+    updateUserHandle,
 };

@@ -9,7 +9,7 @@ require("dotenv").config();
 
 const session = require("express-session");
 const Keycloak = require("keycloak-connect");
-const { putImageController } = require("./controller/putImageController");
+const { updateUserHandle } = require("./controller/updateUserController");
 
 const kcConfig = {
     clientId: process.env.KEYCLOAK_CLIENID,
@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
         console.log(error.message);
     }
 });
-app.put("/image", keycloak.protect(), putImageController);
+app.put("/user", keycloak.protect(), updateUserHandle);
 app.get("/test-connect", (req, res) => {
     res.send("okla");
 });
@@ -77,5 +77,5 @@ app.get("/test-protect", keycloak.protect(), (req, res) => {
     res.send("okla");
 });
 server.listen(4444, () => {
-    console.log("server is listen on port 3000");
+    console.log("server is listen on port 4444");
 });

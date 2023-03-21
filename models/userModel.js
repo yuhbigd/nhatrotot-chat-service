@@ -56,9 +56,13 @@ userSchema.statics.createUser = async function createUser(user) {
             if (!user.image) {
                 user.image = userDetails.image;
             }
+            if (!user.lastName) {
+                user.lastName = userDetails.lastName;
+            }
+            if (!user.firstName) {
+                user.firstName = userDetails.firstName;
+            }
             user.email = userDetails.email;
-            user.firstName = userDetails.firstName;
-            user.lastName = userDetails.lastName;
             await this.create(user);
         } else {
             throw new Error("Error while creating user");
