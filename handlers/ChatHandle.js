@@ -238,14 +238,35 @@ module.exports = (io, socket) => {
                     $unwind: "$chatWith",
                 },
                 {
+                    $lookup: {
+                        from: "users",
+                        localField: "chatWith.info",
+                        foreignField: "_id",
+                        as: "chatWith.info",
+                    },
+                },
+                {
+                    $unwind: "$chatWith.info",
+                },
+                {
                     $skip: skip,
                 },
                 {
                     $limit: size,
                 },
-
                 {
                     $sort: { "chatWith.lastTimeCommunicate": -1 },
+                },
+                {
+                    $project: {
+                        chatWith: {
+                            info: {
+                                chatWith: 0,
+                                sockets: 0,
+                                email: 0,
+                            },
+                        },
+                    },
                 },
                 {
                     $group: {
