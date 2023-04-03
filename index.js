@@ -47,10 +47,10 @@ mongoose
     })
     .catch((err) => console.log(err));
 io.use(function (socket, next) {
-    if (!socket.handshake.headers.authorization) {
+    if (!socket.handshake.auth.token) {
         return next(new Error("Authentication error"));
     }
-    const token = socket.handshake.headers.authorization.substring(7);
+    const token = socket.handshake.auth.token;
     jwt.verify(token, publicKey, { algorithms: ["RS256"] }, (err, decoded) => {
         if (err) {
             next(new Error("Authentication error"));
