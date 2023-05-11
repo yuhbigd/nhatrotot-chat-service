@@ -1,8 +1,10 @@
+require("./firebase/FirebaseConfig");
 const express = require("express");
 const app = express();
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const mongoose = require("mongoose");
+const notificationRouter = require("./routes/notificationRoute");
 const ClientConnectHandle = require("./handlers/ClientConnectHandle");
 const ChatHandle = require("./handlers/ChatHandle");
 require("dotenv").config();
@@ -47,10 +49,15 @@ mongoose
     })
     .catch((err) => console.log(err));
 io.use(function (socket, next) {
-    if (!socket.handshake.auth.token) {
+    if (
+        !socket.handshake.auth.token &&
+        !socket.handshake.headers.access_token
+    ) {
         return next(new Error("Authentication error"));
     }
-    const token = socket.handshake.auth.token;
+    const token = !socket.handshake.auth.token
+        ? socket.handshake.headers.access_token
+        : socket.handshake.auth.token;
     jwt.verify(token, publicKey, { algorithms: ["RS256"] }, (err, decoded) => {
         if (err) {
             next(new Error("Authentication error"));
@@ -76,6 +83,7 @@ app.get("/test-connect", (req, res) => {
 app.get("/test-protect", keycloak.protect(), (req, res) => {
     res.send("okla");
 });
+app.use("/", [keycloak.protect(), notificationRouter.router]);
 server.listen(4444, () => {
     console.log("server is listen on port 4444");
 });

@@ -1,5 +1,9 @@
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
+const {
+    generateMessage,
+    sendNotificationToUser,
+} = require("../firebase/fcm/fcmCore");
 require("dotenv").config();
 
 async function getTotalUnread(id) {
@@ -170,7 +174,14 @@ module.exports = (io, socket) => {
                     chat: chatWithUserData,
                 });
             }
+            const notificationMessage = generateMessage();
+            notificationMessage.data.body = chat.body;
+            notificationMessage.data.fromFirstName = fromUser.firstName;
+            notificationMessage.data.fromLastName = fromUser.lastName;
+            notificationMessage.data.fromId = fromId;
+            await sendNotificationToUser(notificationMessage, toId);
         } catch (error) {
+            console.log(error);
             socket.emit("error", "internal error. Cannot send message");
         }
     });
