@@ -94,7 +94,7 @@ module.exports = (io, socket) => {
                     {
                         $set: {
                             "chatWith.$.message": message.body,
-                            "chatWith.$.lastTimeCommunicate": Date.now(),
+                            "chatWith.$.lastTimeCommunicate": new Date(),
                             "chatWith.$.unRead": 0,
                         },
                     },
@@ -116,7 +116,7 @@ module.exports = (io, socket) => {
                     {
                         $set: {
                             "chatWith.$.message": message.body,
-                            "chatWith.$.lastTimeCommunicate": Date.now(),
+                            "chatWith.$.lastTimeCommunicate": new Date(),
                         },
                         $inc: {
                             "chatWith.$.unRead": 1,
@@ -131,6 +131,7 @@ module.exports = (io, socket) => {
                 from: fromId,
                 to: toId,
                 roomId: roomId,
+                createAt: new Date(),
             });
             chat = chat.toJSON();
             let chatWithUserData = {
