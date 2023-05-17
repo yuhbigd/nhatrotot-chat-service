@@ -260,13 +260,13 @@ module.exports = (io, socket) => {
                     $unwind: "$chatWith.info",
                 },
                 {
+                    $sort: { "chatWith.lastTimeCommunicate": -1 },
+                },
+                {
                     $skip: skip,
                 },
                 {
                     $limit: size,
-                },
-                {
-                    $sort: { "chatWith.lastTimeCommunicate": -1 },
                 },
                 {
                     $project: {
